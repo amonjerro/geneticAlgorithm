@@ -1,52 +1,12 @@
 import random
 
 class Population:
-	def __init__(self,dbObject,startDate,endDate,knpLimit,popLimit):
+	def __init__(self,dbObject,knpLimit,popLimit):
 		self.population = []
-		self.db = dbObject
 		self.winningCandidate = 0
 		self.winningFitness = -99999
-		self.startDate = startDate
-		self.startData = []
-		self.endData = []
-		self.endDate = endDate
 		self.limit = knpLimit
 		self.popLimit = popLimit
-		self.stocks = ['Apple','AMD','American Express',
-				'Bank of America',"Barclay's",'Banco Santander',
-				'Bitcoin','Citibank','Comcast','Disney',
-				'Ethereum','Facebook','Fox','Google','HSBC',
-				'Intel','Morgan Stanley','Microsoft','Netflix',
-				'PayPal','Visa','XRP']
-		self.setData()
-	def setData(self):
-		self.startData = self.db.get('tickerdata',
-				['apple_cv','amd_cv','axp_cv',
-				'bac_cv','barcl_cv','bsac_cv',
-				'btcusd_cv','c_cv','cmcsa_cv',
-				'dis_cv','ethusd_cv','fb_cv','fox_cv',
-				'goog_cv','hsbc_cv','intl_cv',
-				'ms_cv','msft_cv','nflx_cv',
-				'pypl_cv','v_cv','xrpusd_cv'],
-				['tickerdate','=',self.startDate])
-		self.endData = self.db.get('tickerdata',
-				['apple_cv','amd_cv','axp_cv',
-				'bac_cv','barcl_cv','bsac_cv',
-				'btcusd_cv','c_cv','cmcsa_cv',
-				'dis_cv','ethusd_cv','fb_cv','fox_cv',
-				'goog_cv','hsbc_cv','intl_cv',
-				'ms_cv','msft_cv','nflx_cv',
-				'pypl_cv','v_cv','xrpusd_cv'],
-				['tickerdate','=',self.endDate])
-		self.startData = self.startData[0]
-		self.endData = self.endData[0]
-		self.chromoData = []
-		for i in range(len(self.startData)):
-			self.chromoData.append({
-					'name':self.stocks[i],
-					'weight':self.startData[i],
-					'profit':self.endData[i] - self.startData[i]
-					})
 	def populate(self):
 		while len(self.population) < self.popLimit:
 			self.population.append(list(map(lambda x: random.getrandbits(1),range(len(self.stocks)))))

@@ -1,6 +1,6 @@
 import os
 import kernel.db
-from models import population
+from models import population, stockdata
 
 devEnv = False
 if 'config' in os.listdir():
