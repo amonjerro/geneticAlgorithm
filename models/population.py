@@ -19,6 +19,14 @@ class Population:
 				'Intel','Morgan Stanley','Microsoft','Netflix',
 				'PayPal','Visa','XRP']
 		self.setData()
+	def reset(self):
+		self.winningCandidate = 0
+		self.winningFitness = -99999
+		del self.population[:]
+	def output(self,state):
+		with open('outputs.csv','a') as f:
+			line = str(state) + ','+ str(self.winningFitness)+','+','.join(map(str,self.winningCandidate))+'\n'
+			f.write(line)
 	def setData(self):
 		self.startData = self.db.get('tickerdata',
 				['apple_cv','amd_cv','axp_cv',
@@ -113,11 +121,15 @@ class MatingPool:
 		for i in range(len(self.pool)//2):
 			self.spawn.append(self.pool[i*2][:lowPoint] + self.pool[i*2+1][lowPoint:highPoint] + self.pool[i*2][highPoint:])
 			self.spawn.append(self.pool[i*2+1][:lowPoint] + self.pool[i*2][lowPoint:highPoint] + self.pool[i*2+1][highPoint:])
+	def mutate(self, mutationRate):
+		for i in range(len(self.pool)):
+			if random.random() <= mutationRate:
+				print('Mutating!')
+				chromosomeToMutate = random.randint(0,len(self.pool[i])-1)
+				self.pool[i][chromosomeToMutate] = abs(self.pool[i][chromosomeToMutate]-1)
 
 
 def generationEvaluation(generation,fitnessFunct):
 	n = len(generation)
 	s = sum(map(fitnessFunct,generation))
-	return (n,s)
-
-		
+	return s/n
